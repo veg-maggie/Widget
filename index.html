@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verification</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="page">
+<section class="card" aria-live="polite">
+
+  <div class="brand">
+    <div class="brand-mark">V</div>
+    <span>Verification</span>
+  </div>
+
+  <!-- STEP 1: CONTACT -->
+  <div id="contact-screen">
+    <div class="main-icon">🔐</div>
+    <h1>Verify your identity</h1>
+    <p class="subtitle">Choose where you want to receive your verification code.</p>
+
+    <label class="label" for="identifier">Mobile number or email</label>
+    <input id="identifier" class="input" type="text"
+           placeholder="919876543210 or you@example.com"
+           autocomplete="email tel">
+
+    <button id="send-btn" class="primary-btn">Send OTP</button>
+    <p id="contact-error" class="status error" hidden></p>
+  </div>
+
+  <!-- STEP 2: OTP -->
+  <div id="otp-screen" hidden>
+    <div class="main-icon">✉</div>
+    <h1>Enter OTP</h1>
+    <p id="otp-description" class="subtitle">
+      Enter the OTP sent to your contact.
+    </p>
+
+    <input id="otp" class="otp-input" inputmode="numeric"
+           autocomplete="one-time-code" maxlength="10"
+           placeholder="Enter OTP">
+
+    <button id="verify-btn" class="primary-btn">Verify OTP</button>
+
+    <div class="resend-area">
+      <button id="resend-current" class="link-btn">Resend OTP</button>
+      <span id="resend-timer"></span>
+    </div>
+
+    <div class="fallback-box">
+      <div class="fallback-title">Didn't receive the OTP?</div>
+      <p>Try another configured verification channel.</p>
+
+      <div class="channel-grid">
+        <button class="channel-btn" data-channel="11">
+          <span>SMS</span><small>OTP</small>
+        </button>
+        <button class="channel-btn" data-channel="12">
+          <span>WhatsApp</span><small>OTP</small>
+        </button>
+        <button class="channel-btn" data-channel="4">
+          <span>Voice</span><small>Call</small>
+        </button>
+        <button class="channel-btn" data-channel="3">
+          <span>Email</span><small>OTP</small>
+        </button>
+      </div>
+    </div>
+
+    <button id="change-contact" class="secondary-btn">Change contact</button>
+    <p id="otp-error" class="status error" hidden></p>
+    <p id="otp-status" class="status" hidden></p>
+  </div>
+
+  <!-- STEP 3: VERIFIED -->
+  <div id="verified-screen" hidden>
+    <div class="success-icon">✓</div>
+    <h1>Verified</h1>
+    <p class="subtitle">Your verification was completed successfully.</p>
+
+    <div class="details">
+      <div class="detail-row">
+        <span>Verification method</span>
+        <strong id="verification-method">SMS OTP</strong>
+      </div>
+      <div class="detail-row">
+        <span>Verified contact</span>
+        <strong id="verified-contact">—</strong>
+      </div>
+      <div class="detail-row">
+        <span>Status</span>
+        <strong class="verified">● Verified</strong>
+      </div>
+    </div>
+
+    <p class="verified-time">Verification completed successfully.</p>
+  </div>
+
+</section>
+<footer>Secure verification</footer>
+</main>
+
+<script>
+window.VERIFICATION_CONFIG = {
+  widgetId: "3669426d4366333639373537",
+  tokenAuth: "362701TxGFMAJrl6aba6bb1P1",
+
+  // The default channel is configured in your MSG91 Widget.
+  // SMS is the intended default in this UI.
+  defaultChannel: "11",
+
+  // Optional: prefill this. Leave empty to ask the user.
+  identifier: "",
+
+  // Mask contact on the final screen.
+  maskContact: true
+};
+</script>
+<script src="script.js"></script>
+</body>
+</html>
