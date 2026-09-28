@@ -230,6 +230,48 @@ function initialSend(){
   sendOtp();
 }
 
+      async function startTruecaller() {
+  setError(otpError, "");
+  setStatus("Opening Truecaller...");
+
+  try {
+    const response = await fetch(
+      "https://control.msg91.com/api/v5/widget/getTruecallerSession" +
+      "?widgetId=" + encodeURIComponent(c.widgetId) +
+      "&isMobileSdk=1",
+      {
+        method: "GET",
+        headers: {
+          "accept": "application/json",
+          "tokenauth": c.tokenAuth
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Truecaller session response:", data);
+
+    if (data.type !== "success" || !data.redirection_url) {
+      throw new Error(
+        data.message || "Unable to start Truecaller verification."
+      );
+    }
+
+    // Launch the native Truecaller application
+    window.location.href = data.redirection_url;
+
+  } catch (error) {
+    console.error("Truecaller error:", error);
+
+    setStatus("");
+    setError(
+      otpError,
+      error?.message || "Unable to open Truecaller."
+    );
+  }
+}
+      
 function loadProvider(urls){
   let i=0;
 
