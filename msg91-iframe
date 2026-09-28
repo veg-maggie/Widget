@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>MSG91 Verification</title>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  const configuration = {
+    widgetId: "3669426d4366333639373537",
+
+    tokenAuth: "362701Tt5i5eqd656ecc2eP1",
+
+    /*
+     * Leave empty if the user should enter
+     * their mobile number/email in the widget.
+     *
+     * You can also set:
+     *
+     * identifier: "+919876543210"
+     *
+     * or:
+     *
+     * identifier: "user@example.com"
+     */
+    identifier: "",
+
+    /*
+     * Enable custom OTP methods.
+     */
+    exposeMethods: true,
+
+    /*
+     * Called after successful verification.
+     */
+    success: (data) => {
+
+      console.log(
+        "MSG91 verification success:",
+        data
+      );
+
+      /*
+       * Send the successful verification
+       * result to the parent page.
+       */
+      window.parent.postMessage(
+        {
+          type: "MSG91_VERIFICATION_SUCCESS",
+          data: data
+        },
+        "*"
+      );
+    },
+
+    /*
+     * Called when verification fails.
+     */
+    failure: (error) => {
+
+      console.error(
+        "MSG91 verification failure:",
+        error
+      );
+
+      /*
+       * Send failure information to parent.
+       */
+      window.parent.postMessage(
+        {
+          type: "MSG91_VERIFICATION_FAILURE",
+          error: error
+        },
+        "*"
+      );
+    }
+  };
+</script>
+
+
+<script>
+  /*
+   * Load MSG91 OTP provider.
+   *
+   * First try MSG91.
+   * If that fails, try Phone91.
+   */
+  (function loadOtpScript(urls) {
+
+    let i = 0;
+
+    function attempt() {
+
+      if (i >= urls.length) {
+
+        console.error(
+          "Unable to load MSG91 OTP provider."
+        );
+
+        window.parent.postMessage(
+          {
+            type: "MSG91_PROVIDER_ERROR",
+            error: "Unable to load MSG91 OTP provider."
+          },
+          "*"
+        );
+
+        return;
+      }
+
+      const script =
+        document.createElement("script");
+
+      script.src = urls[i];
+
+      script.async = true;
+
+      script.onload = () => {
+
+        if (
+          typeof window.initSendOTP ===
+          "function"
+        ) {
+
+          console.log(
+            "MSG91 OTP provider loaded."
+          );
+
+          window.initSendOTP(
+            configuration
+          );
+
+        } else {
+
+          console.error(
+            "initSendOTP was not found."
+          );
+
+          i++;
+
+          attempt();
+        }
+      };
+
+      script.onerror = () => {
+
+        console.warn(
+          "Failed to load:",
+          urls[i]
+        );
+
+        i++;
+
+        attempt();
+      };
+
+      document.head.appendChild(script);
+    }
+
+    attempt();
+
+  })([
+    "https://verify.msg91.com/otp-provider.js",
+    "https://verify.phone91.com/otp-provider.js"
+  ]);
+</script>
+
+</body>
+</html>
