@@ -1,127 +1,480 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Verification</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Verification</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: min(100%, 600px);
+      padding: 40px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #111827;
+      color: #ffffff;
+    }
+
+    .main-content {
+      text-align: center;
+    }
+
+    .icon-circle {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f3f4f6;
+      font-size: 30px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      max-width: 400px;
+      margin: 12px auto 25px;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .primary-btn {
+      width: 100%;
+      height: 50px;
+      border: 0;
+      border-radius: 12px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn:hover {
+      background: #1f2937;
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px);
+    }
+
+    #iframeContainer {
+      width: 100%;
+      margin-top: 25px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      background: #ffffff;
+    }
+
+    #iframeContainer iframe {
+      display: block;
+      width: 100%;
+      height: 500px;
+      border: 0;
+    }
+
+    .close-btn {
+      width: 100%;
+      height: 42px;
+      margin-top: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background: #f9fafb;
+    }
+
+    footer {
+      margin-top: 15px;
+      color: #9ca3af;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 30px 20px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+
+      #iframeContainer iframe {
+        height: 550px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<main class="page">
-<section class="card" aria-live="polite">
 
-  <div class="brand">
-    <div class="brand-mark">V</div>
-    <span>Verification</span>
-  </div>
+  <main class="page">
 
-  <!-- STEP 1: CONTACT -->
-  <div id="contact-screen">
-    <div class="main-icon">🔐</div>
-    <h1>Verify your identity</h1>
-    <p class="subtitle">Choose where you want to receive your verification code.</p>
+    <section class="card">
 
-    <label class="label" for="identifier">Mobile number or email</label>
-    <input id="identifier" class="input" type="text"
-           placeholder="919876543210 or you@example.com"
-           autocomplete="email tel">
-
-    <button id="send-btn" class="primary-btn">Send OTP</button>
-    <p id="contact-error" class="status error" hidden></p>
-  </div>
-
-  <!-- STEP 2: OTP -->
-  <div id="otp-screen" hidden>
-    <div class="main-icon">✉</div>
-    <h1>Enter OTP</h1>
-    <p id="otp-description" class="subtitle">
-      Enter the OTP sent to your contact.
-    </p>
-
-    <input id="otp" class="otp-input" inputmode="numeric"
-           autocomplete="one-time-code" maxlength="10"
-           placeholder="Enter OTP">
-
-    <button id="verify-btn" class="primary-btn">Verify OTP</button>
-
-    <div class="resend-area">
-      <button id="resend-current" class="link-btn">Resend OTP</button>
-      <span id="resend-timer"></span>
-    </div>
-
-    <div class="fallback-box">
-      <div class="fallback-title">Didn't receive the OTP?</div>
-      <p>Try another configured verification channel.</p>
-
-      <div class="channel-grid">
-        <button id="truecaller-btn" class="channel-btn">
-        <span>Truecaller</span>
-        <small>Continue with Truecaller</small>
-        </button>
-        <button class="channel-btn" data-channel="11">
-          <span>SMS</span><small>OTP</small>
-        </button>
-        <button class="channel-btn" data-channel="12">
-          <span>WhatsApp</span><small>OTP</small>
-        </button>
-        <button class="channel-btn" data-channel="4">
-          <span>Voice</span><small>Call</small>
-        </button>
-        <button class="channel-btn" data-channel="3">
-          <span>Email</span><small>OTP</small>
-        </button>
+      <!-- BRAND -->
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <span>Verification</span>
       </div>
-    </div>
 
-    <button id="change-contact" class="secondary-btn">Change contact</button>
-    <p id="otp-error" class="status error" hidden></p>
-    <p id="otp-status" class="status" hidden></p>
-  </div>
 
-  <!-- STEP 3: VERIFIED -->
-  <div id="verified-screen" hidden>
-    <div class="success-icon">✓</div>
-    <h1>Verified</h1>
-    <p class="subtitle">Your verification was completed successfully.</p>
+      <!-- MAIN CONTENT -->
+      <div class="main-content">
 
-    <div class="details">
-      <div class="detail-row">
-        <span>Verification method</span>
-        <strong id="verification-method">SMS OTP</strong>
+        <div class="icon-circle">
+          🔐
+        </div>
+
+        <h1>
+          Verify your identity
+        </h1>
+
+        <p class="subtitle">
+          Click the button below to start secure OTP verification.
+        </p>
+
+
+        <!-- OPEN IFRAME BUTTON -->
+        <button
+          id="openIframeBtn"
+          class="primary-btn"
+          type="button"
+        >
+          Open OTP Verification
+        </button>
+
+
+        <!-- IFRAME -->
+        <div
+          id="iframeContainer"
+          hidden
+        ></div>
+
+
+        <!-- CLOSE IFRAME -->
+        <button
+          id="closeIframeBtn"
+          class="close-btn"
+          type="button"
+          hidden
+        >
+          Close Verification
+        </button>
+
       </div>
-      <div class="detail-row">
-        <span>Verified contact</span>
-        <strong id="verified-contact">—</strong>
-      </div>
-      <div class="detail-row">
-        <span>Status</span>
-        <strong class="verified">● Verified</strong>
-      </div>
-    </div>
 
-    <p class="verified-time">Verification completed successfully.</p>
-  </div>
+    </section>
 
-</section>
-<footer>Secure verification</footer>
-</main>
+    <footer>
+      Secure verification
+    </footer>
 
-<script>
-window.VERIFICATION_CONFIG = {
-  widgetId: "3669426d4366333639373537",
-  tokenAuth: "362701TxGFMAJrl6aba6bb1P1",
+  </main>
 
-  // The default channel is configured in your MSG91 Widget.
-  // SMS is the intended default in this UI.
-  defaultChannel: "11",
 
-  // Optional: prefill this. Leave empty to ask the user.
-  identifier: "",
+  <script>
+    /*
+     * ========================================================
+     * IFRAME CONFIGURATION
+     * ========================================================
+     */
 
-  // Mask contact on the final screen.
-  maskContact: true
-};
-</script>
-<script src="script.js"></script>
+    const IFRAME_URL =
+      "https://veg-maggie.github.io/walkover/msg91-iframe";
+
+
+    /*
+     * ========================================================
+     * ELEMENTS
+     * ========================================================
+     */
+
+    const openButton =
+      document.getElementById("openIframeBtn");
+
+    const closeButton =
+      document.getElementById("closeIframeBtn");
+
+    const iframeContainer =
+      document.getElementById("iframeContainer");
+
+
+    /*
+     * ========================================================
+     * OPEN IFRAME
+     * ========================================================
+     */
+
+    openButton.addEventListener("click", function () {
+
+      /*
+       * If iframe already exists,
+       * simply show it again.
+       */
+      const existingIframe =
+        document.getElementById("msg91Iframe");
+
+      if (existingIframe) {
+
+        iframeContainer.hidden = false;
+        closeButton.hidden = false;
+
+        return;
+      }
+
+
+      /*
+       * Create iframe
+       */
+      const iframe =
+        document.createElement("iframe");
+
+
+      iframe.id =
+        "msg91Iframe";
+
+      iframe.src =
+        IFRAME_URL;
+
+      iframe.width =
+        "100%";
+
+      iframe.height =
+        "500";
+
+      iframe.frameBorder =
+        "0";
+
+      iframe.allow =
+        "camera; microphone";
+
+      iframe.title =
+        "OTP Verification";
+
+
+      /*
+       * Add iframe to page
+       */
+      iframeContainer.appendChild(
+        iframe
+      );
+
+
+      /*
+       * Show iframe
+       */
+      iframeContainer.hidden =
+        false;
+
+      closeButton.hidden =
+        false;
+
+
+      /*
+       * Change button text
+       */
+      openButton.textContent =
+        "Verification Opened";
+
+
+      /*
+       * Scroll iframe into view
+       */
+      setTimeout(function () {
+
+        iframeContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+      }, 100);
+
+    });
+
+
+    /*
+     * ========================================================
+     * CLOSE IFRAME
+     * ========================================================
+     */
+
+    closeButton.addEventListener(
+      "click",
+      function () {
+
+        iframeContainer.hidden =
+          true;
+
+        closeButton.hidden =
+          true;
+
+        openButton.textContent =
+          "Open OTP Verification";
+
+      }
+    );
+
+
+    /*
+     * ========================================================
+     * RECEIVE MSG91 RESULT FROM IFRAME
+     * ========================================================
+     */
+
+    window.addEventListener(
+      "message",
+      function (event) {
+
+        /*
+         * Only accept messages from
+         * our iframe's GitHub Pages origin.
+         */
+        if (
+          event.origin !==
+          "https://veg-maggie.github.io"
+        ) {
+          return;
+        }
+
+
+        /*
+         * Successful verification
+         */
+        if (
+          event.data?.type ===
+          "MSG91_VERIFICATION_SUCCESS"
+        ) {
+
+          console.log(
+            "MSG91 verification successful:",
+            event.data.data
+          );
+
+          /*
+           * You can perform your
+           * post-verification action here.
+           */
+          openButton.textContent =
+            "Verified";
+
+        }
+
+
+        /*
+         * Failed verification
+         */
+        if (
+          event.data?.type ===
+          "MSG91_VERIFICATION_FAILURE"
+        ) {
+
+          console.error(
+            "MSG91 verification failed:",
+            event.data.error
+          );
+
+        }
+
+
+        /*
+         * MSG91 provider loading error
+         */
+        if (
+          event.data?.type ===
+          "MSG91_PROVIDER_ERROR"
+        ) {
+
+          console.error(
+            "MSG91 provider error:",
+            event.data.error
+          );
+
+        }
+
+      }
+    );
+
+  </script>
+
 </body>
 </html>
